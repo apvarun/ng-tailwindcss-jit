@@ -8,10 +8,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apvarun/ng-tailwindcss-jit.git"
+  },
+  "bugs": "https://github.com/apvarun/ng-tailwindcss-jit/issues",
   "keywords": [
     "tailwindcss",
-    "tailwindcss",
-    "jit",
+    "tailwindcss jit",
     "tailwind",
     "jit",
     "angular"
