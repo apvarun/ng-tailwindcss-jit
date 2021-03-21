@@ -1,8 +1,11 @@
 # ng-tailwindcss-jit
 
+![NPM Version](https://img.shields.io/npm/v/ng-tailwindcss-jit)
+![NPM License](https://img.shields.io/npm/l/ng-tailwindcss-jit)
+
 Configures your angular project to use jit compiler for tailwindcss
 
-![](./ng-tailwindcss-jit.png)
+![Angular + Tailwind CSS JIT](./ng-tailwindcss-jit.png)
 
 ## Usage
 
