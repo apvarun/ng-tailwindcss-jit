@@ -2,7 +2,9 @@
 
 Configures your angular project to use jit compiler for tailwindcss
 
-## Instructions
+![](./ng-tailwindcss-jit.png)
+
+## Usage
 
 ```
 npx ng-tailwindcss-jit
@@ -10,9 +12,14 @@ npx ng-tailwindcss-jit
 
 ## Prerequisites
 
-- Project must have tailwindcss installed
-- Should be running the default angular builder
+- Project must have Twilwind CSS installed
+- Minimum angular version 11.2 (version from which angular supports Tailwind CSS out-of-the-box)
+- Should be using the default angular builder
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
-[MIT](./LICENSE)
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details
