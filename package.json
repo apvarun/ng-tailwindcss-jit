@@ -1,0 +1,24 @@
+{
+  "name": "ng-tailwindcss-jit",
+  "version": "0.0.1",
+  "description": "Configures your angular project to use jit compiler for tailwindcss",
+  "bin": {
+    "ng-tailwindcss-jit": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tailwindcss",
+    "tailwindcss",
+    "jit",
+    "tailwind",
+    "jit",
+    "angular"
+  ],
+  "author": "Varun A P",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^9.1.0"
+  }
+}
