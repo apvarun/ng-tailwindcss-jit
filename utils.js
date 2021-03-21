@@ -12,6 +12,12 @@ function isRoot() {
   return existsSync(pkgPath);
 }
 
+function isAlreadyConfigured() {
+  const pkgPath = path.resolve("./scripts/ng-tailwindcss-jit.js");
+
+  return existsSync(pkgPath);
+}
+
 function getPackageJson() {
   const pkgPath = path.resolve("./package.json");
   if (existsSync(pkgPath)) {
@@ -53,6 +59,7 @@ try {
 
 module.exports = {
   isRoot,
+  isAlreadyConfigured,
   getPackageJson,
   updatePackageJson,
   writeFile,

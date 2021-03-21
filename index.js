@@ -2,19 +2,27 @@
 
 const process = require("process");
 const packageJson = require("./package.json");
+const { execSync } = require("child_process");
+const ora = require("ora");
 const {
   isRoot,
+  isAlreadyConfigured,
   getPackageJson,
   updatePackageJson,
   writeFile,
   generatePostInstallScript,
 } = require("./utils");
-const { execSync } = require("child_process");
+const { logSuccess, logError, logWarning } = require("./logging");
 
-console.log(`ng-tailwindcss-jit v${packageJson.version}`);
+console.log(`${packageJson.name} v${packageJson.version}`);
 
 if (!isRoot()) {
-  console.warn("Not running at project root");
+  logWarning("Not running at project root");
+  process.exit();
+}
+
+if (isAlreadyConfigured()) {
+  logWarning(`${packageJson.name} is already configured`);
   process.exit();
 }
 
@@ -24,20 +32,20 @@ const installedPackages = [
   ...Object.keys(pkg.devDependencies || {}),
 ];
 
-// if (!installedPackages.includes("@angular/core")) {
-//   console.warn("Not an angular project");
-//   process.exit();
-// }
+if (!installedPackages.includes("@angular/core")) {
+  logWarning("Not an angular project");
+  process.exit();
+}
 
-// if (!installedPackages.includes("tailwindcss")) {
-//   console.warn("Tailwind is not installed");
-//   process.exit();
-// }
+if (!installedPackages.includes("tailwindcss")) {
+  logWarning("Tailwind is not installed");
+  process.exit();
+}
 
-// if (!pkg.scripts.start) {
-//   console.warn("Start command not found");
-//   process.exit();
-// }
+if (!pkg.scripts.start) {
+  logWarning("Start command not found");
+  process.exit();
+}
 
 pkg.scripts.start = `TAILWIND_MODE='watch' ${pkg.scripts.start}`;
 pkg.scripts.postinstall = pkg.scripts.postinstall
@@ -48,13 +56,24 @@ writeFile("./scripts/ng-tailwindcss-jit.js", generatePostInstallScript());
 
 updatePackageJson(pkg);
 
-console.log("Installing @tailwindcss/jit");
+if (!installedPackages.includes("@tailwindcss/jit")) {
+  const spinner = ora({
+    text: "Installing @tailwindcss/jit\n",
+    interval: 10,
+  }).start();
+  spinner.color = "green";
 
-try {
-  execSync("node ./scripts/ng-tailwindcss-jit.js && npm i @tailwindcss/jit --save-dev");
-} catch {
-  console.log("Installation of @tailwindcss/jit failed");
-  process.exit();
+  try {
+    execSync(
+      "node ./scripts/ng-tailwindcss-jit.js && npm i @tailwindcss/jit --save-dev"
+    );
+  } catch {
+    logError("Installation of @tailwindcss/jit failed");
+    process.exit();
+  }
+  spinner.stop();
+} else {
+  execSync("node ./scripts/ng-tailwindcss-jit.js");
 }
 
-console.log("Configured successfully");
+logSuccess("Configured successfully");
