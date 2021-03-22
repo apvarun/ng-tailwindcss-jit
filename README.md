@@ -15,7 +15,7 @@ npx ng-tailwindcss-jit
 
 ## Prerequisites
 
-- Project must have Twilwind CSS installed
+- Project must have Tailwind CSS installed
 - Minimum angular version 11.2 (version from which angular supports Tailwind CSS out-of-the-box)
 - Should be using the default angular builder
 
