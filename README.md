@@ -13,11 +13,19 @@ Configures your angular project to use jit compiler for tailwindcss
 npx ng-tailwindcss-jit
 ```
 
+## Demo
+
+https://github.com/apvarun/demo-ng-tailwindcss-jit
+
 ## Prerequisites
 
 - Project must have Tailwind CSS installed
 - Minimum angular version 11.2 (version from which angular supports Tailwind CSS out-of-the-box)
 - Should be using the default angular builder
+
+## How it works
+
+**Read article:** https://apvarun.com/blog/tailwindcss-jit-in-angular
 
 ## Contributing
 
