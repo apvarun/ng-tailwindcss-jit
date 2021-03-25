@@ -8,6 +8,7 @@ const {
   isAlreadyConfigured,
   getPackageJson,
   updatePackageJson,
+  readModule,
   writeFile,
   generatePostInstallScript,
 } = require("./utils");
@@ -90,3 +91,17 @@ try {
 }
 
 logSuccess("Configured @tailwind/jit successfully");
+
+// FREQUENT ERRORS
+try {
+  const tailwindConfig = readModule("./tailwind.config.js");
+  if (
+    !tailwindConfig ||
+    !tailwindConfig.purge ||
+    tailwindConfig.purge.length === 0
+  ) {
+    logWarning(
+      "Ensure that files to `purge` are configured in your tailwind config file"
+    );
+  }
+} catch {}

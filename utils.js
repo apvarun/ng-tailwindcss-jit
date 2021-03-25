@@ -33,6 +33,14 @@ function updatePackageJson(content) {
   return outputFileSync("./package.json", JSON.stringify(content, null, 2));
 }
 
+function readModule(file) {
+  const filePath = path.resolve(file);
+  if (existsSync(filePath)) {
+    return require(filePath);
+  }
+  return false;
+}
+
 function writeFile(path, content) {
   ensureFileSync(path);
 
@@ -62,6 +70,7 @@ module.exports = {
   isAlreadyConfigured,
   getPackageJson,
   updatePackageJson,
+  readModule,
   writeFile,
   generatePostInstallScript,
 };
