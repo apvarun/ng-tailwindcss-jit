@@ -12,8 +12,13 @@ function logWarning(message) {
   console.log(chalk.yellow(message));
 }
 
+function log(message) {
+  console.log(message);
+}
+
 module.exports = {
   logError,
   logSuccess,
   logWarning,
+  log,
 };
