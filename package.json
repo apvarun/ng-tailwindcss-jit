@@ -1,6 +1,6 @@
 {
   "name": "ng-tailwindcss-jit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Configures your angular project to use jit compiler for tailwindcss",
   "bin": {
     "ng-tailwindcss-jit": "index.js"
@@ -24,7 +24,6 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.0",
-    "fs-extra": "^9.1.0",
-    "ora": "^5.4.0"
+    "fs-extra": "^9.1.0"
   }
 }

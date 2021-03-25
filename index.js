@@ -3,19 +3,20 @@
 const process = require("process");
 const packageJson = require("./package.json");
 const { execSync } = require("child_process");
-const ora = require("ora");
 const {
   isRoot,
   isAlreadyConfigured,
   getPackageJson,
   updatePackageJson,
+  readModule,
   writeFile,
   generatePostInstallScript,
 } = require("./utils");
-const { logSuccess, logError, logWarning } = require("./logging");
+const { logSuccess, logError, logWarning, log } = require("./logging");
 
 console.log(`${packageJson.name} v${packageJson.version}`);
 
+// VALIDATIONS
 if (!isRoot()) {
   logWarning("Not running at project root");
   process.exit();
@@ -47,33 +48,60 @@ if (!pkg.scripts.start) {
   process.exit();
 }
 
-pkg.scripts.start = `TAILWIND_MODE='watch' ${pkg.scripts.start}`;
-pkg.scripts.postinstall = pkg.scripts.postinstall
-  ? `node ./scripts/ng-tailwindcss-jit.js && ${pkg.scripts.postinstall}`
-  : `node ./scripts/ng-tailwindcss-jit.js`;
+// START SCRIPT
+log("Update start script in package.json");
+const START_SCRIPT = "cross-env TAILWIND_MODE=watch";
+
+let startScript = pkg.scripts.start;
+startScript = startScript.replace("TAILWIND_MODE='watch' ", "");
+if (!startScript.includes(START_SCRIPT)) {
+  startScript = startScript.replace("ng serve", `${START_SCRIPT} ng serve`);
+}
+pkg.scripts.start = startScript;
+
+// POST INSTALL SCRIPT
+log("Add postinstall script in package.json");
+const POSTINSTALL_SCRIPT = "node ./scripts/ng-tailwindcss-jit.js";
+
+let postinstallScript = pkg.scripts.postinstall;
+if (!postinstallScript) {
+  pkg.scripts.postinstall = POSTINSTALL_SCRIPT;
+} else if (!postinstallScript.includes(POSTINSTALL_SCRIPT)) {
+  pkg.scripts.postinstall = `${POSTINSTALL_SCRIPT} && ${pkg.scripts.postinstall}`;
+}
 
 writeFile("./scripts/ng-tailwindcss-jit.js", generatePostInstallScript());
 
 updatePackageJson(pkg);
 
-if (!installedPackages.includes("@tailwindcss/jit")) {
-  const spinner = ora({
-    text: "Installing @tailwindcss/jit\n",
-    interval: 10,
-  }).start();
-  spinner.color = "green";
+// INSTALL PACKAGES
+log("Installing required packages");
 
-  try {
-    execSync(
-      "node ./scripts/ng-tailwindcss-jit.js && npm i @tailwindcss/jit --save-dev"
-    );
-  } catch {
-    logError("Installation of @tailwindcss/jit failed");
-    process.exit();
-  }
-  spinner.stop();
-} else {
-  execSync("node ./scripts/ng-tailwindcss-jit.js");
+const tailwindJitPackageName = !installedPackages.includes("@tailwindcss/jit")
+  ? "@tailwindcss/jit"
+  : "";
+try {
+  execSync(`npm i --save-dev ${tailwindJitPackageName} cross-env`, {
+    stdio: "inherit",
+  });
+  execSync("node ./scripts/ng-tailwindcss-jit.js", { stdio: "inherit" });
+} catch {
+  logError("Installation of @tailwindcss/jit failed");
+  process.exit();
 }
 
-logSuccess("Configured successfully");
+logSuccess("Configured @tailwind/jit successfully");
+
+// FREQUENT ERRORS
+try {
+  const tailwindConfig = readModule("./tailwind.config.js");
+  if (
+    !tailwindConfig ||
+    !tailwindConfig.purge ||
+    tailwindConfig.purge.length === 0
+  ) {
+    logWarning(
+      "Ensure that files to `purge` are configured in your tailwind config file"
+    );
+  }
+} catch {}
